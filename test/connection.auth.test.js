@@ -27,3 +27,29 @@ describe('connection:', function() {
     });
   });
 });
+
+describe('connection:', function() {
+  describe('supports authMechanism', function() {
+    it('in querystring', function(done) {
+      var conn = mongoose.createConnection();
+      conn._open = function() {
+        assert.ok(conn.options);
+        assert.ok(conn.options.auth);
+        assert.equal(conn.options.auth.authMechanism, 'PLAIN');
+        conn.close(done);
+      };
+      conn.open(start.uri + '?authMechanism=PLAIN');
+    });
+
+    it('passed as an option', function(done) {
+      var conn = mongoose.createConnection();
+      conn._open = function() {
+        assert.ok(conn.options);
+        assert.ok(conn.options.auth);
+        assert.equal(conn.options.auth.authMechanism, 'PLAIN');
+        conn.close(done);
+      };
+      conn.open(start.uri, {auth: {authMechanism: 'PLAIN'}});
+    });
+  });
+});
